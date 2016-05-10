@@ -1,0 +1,138 @@
+<!DOCTYPE HTML> 
+<html> 
+<head>  <title>Canvas Example</title>
+</head> 
+ <body> 
+
+<h1 style="color: red; text-align: center;">Animation On The Canvas</h1>
+
+<h2 style="color: red; text-align: center;">HTML5</h2>
+
+
+<canvas id="this_canvas" width="200" height="500"
+style="border:4px solid #8600ED; margin-left: 25%; margin-right: 25%;">
+Your browser does not support the HTML5 canvas tag.
+</canvas>
+
+
+
+<script type="text/javascript"> 
+ var context = document.getElementById('this_canvas').getContext('2d');
+ var my_image=new Image();
+ my_image.src="ball.gif";
+
+function randomColorGen() {
+	var randomColor = Math.floor((Math.random() * 255) + 1);
+    return randomColor
+}
+
+function randomRadiusGen() {
+	var randomRadNum = ((Math.random() * 50) + 1);
+	return randomRadNum
+}
+
+
+
+
+function ball(){
+	this.x=Math.random()*context.canvas.width;
+	this.y=Math.random()*context.canvas.height;
+	this.vx=(Math.random() - .5);
+	this.vy=(Math.random() - .5);
+	this.radius = randomRadiusGen();
+	this.color1 = randomColorGen();
+	this.color2 = randomColorGen();
+	this.color3 = randomColorGen();
+	this.move=ball_move;
+	this.draw=ball_draw;
+}
+
+
+
+function ball_move(){
+	//this.x+=this.vx;
+	//this.y+=this.vy;
+	this.vx+=(Math.random()-0.5)*0.1;
+	this.vy+=(Math.random()-0.5)*0.1;
+
+	if (this.x + this.radius > context.canvas.width){
+		this.x = context.canvas.width - this.radius;
+		this.vx = this.vx * -1;
+	}
+
+	if (this.x - this.radius < 0){
+		this.x = 0 + this.radius;
+		this.vx = this.vx * -1;
+	}
+
+	if (this.y + this.radius > context.canvas.height){
+		this.y = context.canvas.height - this.radius;
+		this.vy = this.vy * -1;
+	}
+
+	if (this.y - this.radius < 0){
+		this.y = 0 + this.radius;
+		this.vy = this.vy * -1;
+	}
+
+	else {
+	this.x+=this.vx;
+	this.y+=this.vy;
+	}
+
+}
+function ball_draw(){
+                   
+	context.beginPath();
+	//context.fillStyle = "rgb(" + this.color1 + "," + this.color2 + "," + this.color3 + ")";
+	context.arc(this.x, this.y, this.radius, 0, 2 * Math.PI);
+	context.fillStyle = 'rgb(' + this.color1 +',' + this.color2 + ',' + this.color3 + ')';
+	context.fill();
+	context.stroke();
+
+
+}
+
+var ball_array=new Array();
+ function begin(){
+	for(var i=0;i<100;i++){
+	 var temp=new ball();
+	 ball_array.push(temp);
+	 }
+
+}
+
+function going(){
+
+     // erase ball
+	context.beginPath();
+	context.fillStyle = '#00fff0';
+	context.rect(0,0,context.canvas.width,context.canvas.height);
+	context.fill();
+  
+     //move
+     var x;
+     for(x in ball_array){		
+		ball_array[x].move();
+		ball_array[x].draw();
+	}
+
+}
+ 
+ function resize_can(){
+	context.canvas.width=(window.innerWidth)/2;
+	context.canvas.height=(window.innerHeight)/1.5;
+}
+ 
+window.onresize=resize_can;
+onLoad=resize_can();
+ 
+onLoad=begin();
+setInterval(going,10);
+ 
+</script> 
+ 
+
+
+ </body> 
+</html>
